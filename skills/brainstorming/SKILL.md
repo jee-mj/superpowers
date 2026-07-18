@@ -10,7 +10,11 @@ Help turn ideas into fully formed designs and specs through natural collaborativ
 Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
 
 <HARD-GATE>
-Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
+Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it.
+
+After approval:
+- For simple, bounded work that follows established project patterns, transition directly to implementation using the executing-plans and test-driven-development skills.
+- For work that needs a written spec and implementation plan, continue through the documented design flow below.
 </HARD-GATE>
 
 ## Anti-Pattern: "This Is Too Simple To Need A Design"
@@ -25,6 +29,18 @@ You MUST create a task for each of these items and complete them in order:
 2. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 3. **Propose 2-3 approaches** — with trade-offs and your recommendation
 4. **Present design** — in sections scaled to their complexity, get user approval after each section
+
+After step 4, choose one path:
+
+### Direct implementation path
+
+5. **Transition to implementation** — invoke executing-plans and test-driven-development
+6. **Implement and verify the approved design**
+
+Do not generate a spec or implementation plan document on this path.
+
+### Documented implementation path
+
 5. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
 6. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 7. **User reviews written spec** — ask user to review the spec file before proceeding
@@ -39,6 +55,10 @@ digraph brainstorming {
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
+    "Choose path" [shape=diamond];
+
+    "Invoke executing-plans\nand test-driven-development" [shape=doublecircle];
+
     "Write design doc" [shape=box];
     "Spec self-review\n(fix inline)" [shape=box];
     "User reviews spec?" [shape=diamond];
@@ -49,7 +69,11 @@ digraph brainstorming {
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Write design doc" [label="yes"];
+    "User approves design?" -> "Choose path" [label="yes"];
+
+    "Choose path" -> "Invoke executing-plans\nand test-driven-development" [label="simple / bounded"];
+    "Choose path" -> "Write design doc" [label="documented"];
+
     "Write design doc" -> "Spec self-review\n(fix inline)";
     "Spec self-review\n(fix inline)" -> "User reviews spec?";
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
@@ -57,7 +81,11 @@ digraph brainstorming {
 }
 ```
 
-**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+**The terminal state is one of:**
+- invoking executing-plans and test-driven-development for direct implementation, or
+- invoking writing-plans for the documented implementation path.
+
+Do NOT invoke frontend-design, mcp-builder, or any other implementation skill directly from brainstorming.
 
 ## The Process
 
@@ -100,7 +128,23 @@ digraph brainstorming {
 
 ## After the Design
 
-**Documentation:**
+### Direct Implementation
+
+After the user approves the design, use the direct implementation path when the task is simple, bounded, and follows established project patterns.
+
+Examples include creating a new theme from upstream artifacts and applying it, making a small config change, or implementing a localized change through an existing interface.
+
+On this path:
+
+- Do not write a design doc.
+- Do not invoke writing-plans.
+- Invoke executing-plans and test-driven-development.
+- Implement only the approved design.
+- If implementation reveals materially broader scope or unresolved design decisions, stop and return to brainstorming.
+
+### Documentation
+
+Use the documented implementation path when the work needs a durable spec, separate review, or a detailed implementation plan.
 
 - Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
   - (User preferences for spec location override this default)
@@ -126,7 +170,14 @@ Wait for the user's response. If they request changes, make them and re-run the 
 
 **Implementation:**
 
-- Invoke the writing-plans skill to create a detailed implementation plan
+For direct implementation:
+
+- Invoke executing-plans and test-driven-development.
+- Do NOT invoke writing-plans.
+
+For documented implementation:
+
+- Invoke the writing-plans skill to create a detailed implementation plan.
 - Do NOT invoke any other skill. writing-plans is the next step.
 
 ## Key Principles
